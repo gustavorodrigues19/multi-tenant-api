@@ -9,6 +9,7 @@ import Franchise from './@shared/entities/franchise.entity'
 import Plan from './@shared/entities/plan.entity'
 import Tenant from './@shared/entities/tenant.entity'
 import { BusinessAdmModule } from './business-adm/business.module'
+import { AuthenticationModule } from './authentication/authentication.module'
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { BusinessAdmModule } from './business-adm/business.module'
     }),
     SystemAdmModule,
     BusinessAdmModule,
+    AuthenticationModule,
   ],
   controllers: [AppController],
   providers: [AppService],
