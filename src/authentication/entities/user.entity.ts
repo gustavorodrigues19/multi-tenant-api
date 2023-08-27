@@ -1,5 +1,5 @@
-import Franchise from 'src/@shared/entities/franchise.entity'
-import Tenant from 'src/@shared/entities/tenant.entity'
+import Franchise from '../../@shared/entities/franchise.entity'
+import Tenant from '../../@shared/entities/tenant.entity'
 import {
   Column,
   CreateDateColumn,
