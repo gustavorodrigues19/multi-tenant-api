@@ -1,13 +1,13 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-require('dotenv').config();
-import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { SystemAdmModule } from './system-adm/system-adm.module';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import Franchise from './@shared/entities/franchise.tentity';
-import Plan from './@shared/entities/plan.entity';
-import Tenant from './@shared/entities/tenant.entity';
+require('dotenv').config()
+import { Module } from '@nestjs/common'
+import { AppController } from './app.controller'
+import { AppService } from './app.service'
+import { SystemAdmModule } from './system-adm/system-adm.module'
+import { TypeOrmModule } from '@nestjs/typeorm'
+import Franchise from './@shared/entities/franchise.tentity'
+import Plan from './@shared/entities/plan.entity'
+import Tenant from './@shared/entities/tenant.entity'
 
 @Module({
   imports: [

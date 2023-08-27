@@ -5,60 +5,60 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
-} from 'typeorm';
-import Tenant from './tenant.entity';
+} from 'typeorm'
+import Tenant from './tenant.entity'
 
 @Entity()
 export default class Franchise {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  id: string
 
   @Column()
-  name: string;
+  name: string
 
   @Column()
-  email: string;
+  email: string
 
   @Column()
-  phone: string;
+  phone: string
 
   @Column()
-  document: string;
+  document: string
 
   @Column()
-  street: string;
+  street: string
 
   @Column()
-  number: string;
+  number: string
 
   @Column()
-  neighborhood: string;
+  neighborhood: string
 
   @Column({ nullable: true })
-  complement: string;
+  complement: string
 
   @Column()
-  zipCode: string;
+  zipCode: string
 
   @Column()
-  city: string;
+  city: string
 
   @Column()
-  state: string;
+  state: string
 
   @Column({ default: true })
-  active: boolean;
+  active: boolean
 
   @CreateDateColumn()
-  createdAt: Date;
+  createdAt: Date
 
   @UpdateDateColumn()
-  updatedAt: Date;
+  updatedAt: Date
 
   // Relationships
   @ManyToOne(() => Tenant, (tenant) => tenant.id, {
     nullable: false,
     eager: true,
   })
-  tenant: Tenant;
+  tenant: Tenant
 }

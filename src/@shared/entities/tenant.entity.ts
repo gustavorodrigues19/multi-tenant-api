@@ -5,36 +5,36 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   ManyToOne,
-} from 'typeorm';
-import Plan from './plan.entity';
+} from 'typeorm'
+import Plan from './plan.entity'
 
 @Entity()
 export default class Tenant {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  id: string
 
   @Column()
-  name: string;
+  name: string
 
   @Column()
-  document: string;
+  document: string
 
   @Column()
-  domain: string;
+  domain: string
 
   @Column({ default: true })
-  isActive: boolean;
+  isActive: boolean
 
   @CreateDateColumn()
-  createdAt: Date;
+  createdAt: Date
 
   @UpdateDateColumn()
-  updatedAt: Date;
+  updatedAt: Date
 
   // Relationships
   @ManyToOne(() => Plan, (plan) => plan.id, {
     nullable: false,
     eager: true,
   })
-  tenant: Plan;
+  plan: Plan
 }
