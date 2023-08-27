@@ -46,8 +46,11 @@ export default class Franchise {
   @Column()
   state: string
 
+  @Column()
+  country: string
+
   @Column({ default: true })
-  active: boolean
+  isActive: boolean
 
   @CreateDateColumn()
   createdAt: Date

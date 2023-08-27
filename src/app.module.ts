@@ -5,9 +5,10 @@ import { AppController } from './app.controller'
 import { AppService } from './app.service'
 import { SystemAdmModule } from './system-adm/system-adm.module'
 import { TypeOrmModule } from '@nestjs/typeorm'
-import Franchise from './@shared/entities/franchise.tentity'
+import Franchise from './@shared/entities/franchise.entity'
 import Plan from './@shared/entities/plan.entity'
 import Tenant from './@shared/entities/tenant.entity'
+import { BusinessAdmModule } from './business-adm/business.module'
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import Tenant from './@shared/entities/tenant.entity'
       autoLoadEntities: true,
     }),
     SystemAdmModule,
+    BusinessAdmModule,
   ],
   controllers: [AppController],
   providers: [AppService],
