@@ -33,7 +33,22 @@ export default class AuthenticationService
       throw new HttpException('Invalid credentials', HttpStatus.UNAUTHORIZED)
     }
 
-    const data = 'fake data'
+    const data = {
+      tenant: {
+        id: user.tenant.id,
+        name: user.tenant.name,
+      },
+      franchises: user.franchises.map((franchise) => ({
+        id: franchise.id,
+        name: franchise.name,
+      })),
+      user: {
+        id: user.id,
+        username: user.username,
+        email: user.email,
+        role: user.role,
+      },
+    }
     const token = await this.jwtService.signAsync({ data })
 
     return token
