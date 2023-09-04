@@ -10,6 +10,8 @@ import Plan from './@shared/entities/plan.entity'
 import Tenant from './@shared/entities/tenant.entity'
 import { BusinessAdmModule } from './business-adm/business.module'
 import { AuthenticationModule } from './authentication/authentication.module'
+import { APP_GUARD } from '@nestjs/core'
+import { AuthGuard } from './authentication/guards/auth.guard'
 
 @Module({
   imports: [
@@ -30,6 +32,12 @@ import { AuthenticationModule } from './authentication/authentication.module'
     AuthenticationModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuard,
+    },
+  ],
 })
 export class AppModule {}

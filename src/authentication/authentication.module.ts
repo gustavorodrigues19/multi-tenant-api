@@ -5,9 +5,17 @@ import Tenant from '../@shared/entities/tenant.entity'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import Franchise from '../@shared/entities/franchise.entity'
 import { User } from './entities/user.entity'
+import { JwtModule } from '@nestjs/jwt'
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Tenant, Franchise, User])],
+  imports: [
+    TypeOrmModule.forFeature([Tenant, Franchise, User]),
+    JwtModule.register({
+      global: true,
+      secret: process.env.SECRET_KEY,
+      signOptions: { expiresIn: '1h' },
+    }),
+  ],
   controllers: [UsersController],
   providers: [UsersService],
 })
