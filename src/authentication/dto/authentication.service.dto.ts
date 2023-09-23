@@ -1,6 +1,5 @@
 export interface AuthenticationInputDto {
-  email: string
-  username?: string
+  username: string
   password: string
 }
 export const ROLES = {

@@ -21,7 +21,7 @@ export default class AuthenticationService
     input: AuthenticationInputDto,
   ): Promise<string> {
     const user = await this.userRepository.findOneBy({
-      email: input.email,
+      email: input.username,
       username: input.username,
     })
     if (!user) throw new HttpException('User not found', HttpStatus.NOT_FOUND)

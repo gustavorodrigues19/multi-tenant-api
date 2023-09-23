@@ -13,35 +13,35 @@ import { CreateUserUseCaseInputDto } from '../dto/users-service.dto'
 
 @Controller('users')
 export default class UsersController {
-  constructor(private readonly franchiseService: UsersService) {}
+  constructor(private readonly usersService: UsersService) {}
 
   @Post()
   create(@Body() input: CreateUserUseCaseInputDto) {
-    return this.franchiseService.createUserUseCase(input)
+    return this.usersService.createUserUseCase(input)
   }
 
   @Get()
   findAll(@Query() { take, skip }) {
-    return this.franchiseService.findAllUsersUseCase(take, skip)
+    return this.usersService.findAllUsersUseCase(take, skip)
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.franchiseService.findUserUseCase(id)
+    return this.usersService.findUserUseCase(id)
   }
 
   @Put(':id')
   update(@Param('id') id: string, @Body() input: CreateUserUseCaseInputDto) {
-    return this.franchiseService.updateUserUseCase({ id, ...input })
+    return this.usersService.updateUserUseCase({ id, ...input })
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.franchiseService.removeUserUseCase(id)
+    return this.usersService.removeUserUseCase(id)
   }
 
   @Put(':id/deactivate')
   deactivate(@Param('id') id: string) {
-    return this.franchiseService.deactivateUserUseCase(id)
+    return this.usersService.deactivateUserUseCase(id)
   }
 }
