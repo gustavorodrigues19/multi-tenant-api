@@ -10,13 +10,16 @@ import {
 } from '@nestjs/common'
 import UsersService from '../services/users.service'
 import { CreateUserUseCaseInputDto } from '../dto/users-service.dto'
+import { Public } from '../decorators/public.decorator'
+import { CreateUserValidationDto } from './validations/user.dto'
 
 @Controller('users')
 export default class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
+  @Public()
   @Post()
-  create(@Body() input: CreateUserUseCaseInputDto) {
+  create(@Body() input: CreateUserValidationDto) {
     return this.usersService.createUserUseCase(input)
   }
 
