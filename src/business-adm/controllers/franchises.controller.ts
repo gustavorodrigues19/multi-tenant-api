@@ -9,14 +9,12 @@ import {
   Query,
 } from '@nestjs/common'
 import FranchisesService from '../services/franchises.service'
-import { Public } from 'src/authentication/decorators/public.decorator'
 import { FranchiseInputValidationDto } from './validations/franchises'
 
 @Controller('franchises')
 export default class FranchisesController {
   constructor(private readonly franchiseService: FranchisesService) {}
 
-  @Public()
   @Post()
   create(@Body() input: FranchiseInputValidationDto) {
     return this.franchiseService.createFranchiseUseCase(input)

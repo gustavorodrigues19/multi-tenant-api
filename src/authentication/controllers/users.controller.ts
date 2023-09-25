@@ -10,18 +10,14 @@ import {
 } from '@nestjs/common'
 import UsersService from '../services/users.service'
 import { CreateUserUseCaseInputDto } from '../dto/users-service.dto'
-import { Public } from '../decorators/public.decorator'
 import {
   CreateUserMasterAdminValidationDto,
   CreateUserValidationDto,
 } from './validations/user.dto'
-import { PaginationDto } from 'src/@shared/validations'
-
 @Controller('users')
 export default class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Public()
   @Post('master-admin')
   createMasterAdmin(@Body() input: CreateUserMasterAdminValidationDto) {
     return this.usersService.createUserUseCase(input)
@@ -33,7 +29,7 @@ export default class UsersController {
   }
 
   @Get()
-  findAll(@Query() { take, skip }: PaginationDto) {
+  findAll(@Query() { take, skip }) {
     return this.usersService.findAllUsersUseCase(take, skip)
   }
 
