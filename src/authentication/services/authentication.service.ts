@@ -19,9 +19,8 @@ export default class AuthenticationService
 
   public async authenticateUseCase(
     input: AuthenticationInputDto,
-  ): Promise<string> {
+  ): Promise<{ accessToken: string }> {
     const user = await this.userRepository.findOneBy({
-      email: input.username,
       username: input.username,
     })
     if (!user) throw new HttpException('User not found', HttpStatus.NOT_FOUND)
@@ -50,7 +49,8 @@ export default class AuthenticationService
       },
     }
     const token = await this.jwtService.signAsync({ data })
+    const tokenEncoded = Buffer.from(token).toString('base64')
 
-    return token
+    return { accessToken: tokenEncoded }
   }
 }

@@ -1,6 +1,6 @@
-import { IsEmail, IsEnum, IsNotEmpty, IsUUID, isEnum } from 'class-validator'
+import { IsBase64, IsEmail, IsEnum, IsNotEmpty, IsUUID } from 'class-validator'
 
-export class CreateUserValidationDto {
+class BodyUserValidationDto {
   @IsNotEmpty()
   username: string
 
@@ -9,6 +9,7 @@ export class CreateUserValidationDto {
   email: string
 
   @IsNotEmpty()
+  @IsBase64()
   passwd: string
 
   @IsNotEmpty()
@@ -19,6 +20,12 @@ export class CreateUserValidationDto {
 
   @IsNotEmpty()
   isActive: boolean
+}
+
+export class CreateUserValidationDto extends BodyUserValidationDto {
+  @IsNotEmpty()
+  @IsUUID('4', { each: true })
+  franchisesIds: string[]
 
   @IsEnum(['ORGANIZATION_ADMIN', 'FRANCHISE_ADMIN', 'CUSTOM_ADMIN'], {
     message: 'Invalid role',
@@ -28,8 +35,18 @@ export class CreateUserValidationDto {
   @IsNotEmpty()
   @IsUUID()
   tenantId: string
+}
 
+export class CreateUserMasterAdminValidationDto extends BodyUserValidationDto {
   @IsNotEmpty()
   @IsUUID('4', { each: true })
   franchisesIds: string[]
+
+  @IsEnum(['MASTER_ADMIN'], {
+    message: 'Invalid role',
+  })
+  role: string
+
+  @IsUUID('4')
+  tenantId: string
 }

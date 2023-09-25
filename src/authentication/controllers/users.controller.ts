@@ -11,20 +11,29 @@ import {
 import UsersService from '../services/users.service'
 import { CreateUserUseCaseInputDto } from '../dto/users-service.dto'
 import { Public } from '../decorators/public.decorator'
-import { CreateUserValidationDto } from './validations/user.dto'
+import {
+  CreateUserMasterAdminValidationDto,
+  CreateUserValidationDto,
+} from './validations/user.dto'
+import { PaginationDto } from 'src/@shared/validations'
 
 @Controller('users')
 export default class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Public()
+  @Post('master-admin')
+  createMasterAdmin(@Body() input: CreateUserMasterAdminValidationDto) {
+    return this.usersService.createUserUseCase(input)
+  }
+
   @Post()
   create(@Body() input: CreateUserValidationDto) {
     return this.usersService.createUserUseCase(input)
   }
 
   @Get()
-  findAll(@Query() { take, skip }) {
+  findAll(@Query() { take, skip }: PaginationDto) {
     return this.usersService.findAllUsersUseCase(take, skip)
   }
 

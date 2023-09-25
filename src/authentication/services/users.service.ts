@@ -31,7 +31,7 @@ export default class UsersService implements UsersServiceGateway {
     }
 
     const franchises = await this.franchiseRepository.find({
-      where: { id: In(franchisesIds) },
+      where: { id: In(franchisesIds || []) },
     })
     if (franchises.length !== franchisesIds.length) {
       throw new HttpException('Franchises not found', HttpStatus.NOT_FOUND)

@@ -19,5 +19,7 @@ export interface UsersServiceGateway {
 }
 
 export interface AuthenticationServiceGateway {
-  authenticateUseCase(input: AuthenticationInputDto): Promise<string>
+  authenticateUseCase(
+    input: AuthenticationInputDto,
+  ): Promise<{ accessToken: string }>
 }
