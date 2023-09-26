@@ -7,6 +7,7 @@ import {
   Put,
   Delete,
   Query,
+  UseGuards,
 } from '@nestjs/common'
 import UsersService from '../services/users.service'
 import { CreateUserUseCaseInputDto } from '../dto/users-service.dto'
@@ -14,6 +15,8 @@ import {
   CreateUserMasterAdminValidationDto,
   CreateUserValidationDto,
 } from './validations/user.dto'
+import { PermissionsGuard } from 'src/casl/casl-permissions.factory'
+import { CheckPermissions } from '../decorators/permissions.decorator'
 @Controller('users')
 export default class UsersController {
   constructor(private readonly usersService: UsersService) {}
@@ -23,11 +26,15 @@ export default class UsersController {
     return this.usersService.createUserUseCase(input)
   }
 
+  @CheckPermissions({ action: 'create', subject: 'administrators' })
+  @UseGuards(PermissionsGuard)
   @Post()
   create(@Body() input: CreateUserValidationDto) {
     return this.usersService.createUserUseCase(input)
   }
 
+  @CheckPermissions({ action: 'list', subject: 'administrators' })
+  @UseGuards(PermissionsGuard)
   @Get()
   findAll(@Query() { take, skip }) {
     return this.usersService.findAllUsersUseCase(take, skip)
