@@ -8,6 +8,7 @@ import { User } from './entities/user.entity'
 import { JwtModule } from '@nestjs/jwt'
 import AuthController from './controllers/authentication.controller'
 import AuthenticationService from './services/authentication.service'
+import CaslService from 'src/casl/casl.service'
 
 @Module({
   imports: [
@@ -19,6 +20,6 @@ import AuthenticationService from './services/authentication.service'
     }),
   ],
   controllers: [UsersController, AuthController],
-  providers: [UsersService, AuthenticationService],
+  providers: [UsersService, AuthenticationService, CaslService],
 })
 export class AuthenticationModule {}

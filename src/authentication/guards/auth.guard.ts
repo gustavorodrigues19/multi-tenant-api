@@ -3,6 +3,8 @@ require('dotenv').config()
 import {
   CanActivate,
   ExecutionContext,
+  HttpException,
+  HttpStatus,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common'
@@ -35,7 +37,10 @@ export class AuthGuard implements CanActivate {
 
       request['payload'] = payload
     } catch {
-      throw new UnauthorizedException()
+      throw new HttpException(
+        'You do not have permission to perform this action',
+        HttpStatus.FORBIDDEN,
+      )
     }
     return true
   }

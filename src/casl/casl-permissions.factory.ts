@@ -1,12 +1,9 @@
 import { Reflector } from '@nestjs/core'
 
-import { ForcedSubject, ForbiddenError, MongoAbility } from '@casl/ability'
-
 import {
   Injectable,
   CanActivate,
   ExecutionContext,
-  ForbiddenException,
   HttpException,
   HttpStatus,
 } from '@nestjs/common'
@@ -16,24 +13,21 @@ import {
 } from 'src/authentication/decorators/permissions.decorator'
 import { Payload } from 'src/@shared/types/payload'
 import { PERMISSIONS_PER_ROLE } from './permissions'
-
-export const actions = ['read', 'manage', 'create', 'update', 'delete'] as const
-
-export const subjects = ['Story', 'User', 'all'] as const
-
-export type Permissions = [
-  (typeof actions)[number],
-  (
-    | (typeof subjects)[number]
-    | ForcedSubject<Exclude<(typeof subjects)[number], 'all'>>
-  ),
-]
-
-export type AppPermission = MongoAbility<Permissions>
+import CaslService from './casl.service'
 
 @Injectable()
 export class PermissionsGuard implements CanActivate {
-  constructor(private reflector: Reflector) {}
+  constructor(
+    private reflector: Reflector,
+    private readonly caslService: CaslService,
+  ) {}
+
+  handleErrors(message?: string) {
+    throw new HttpException(
+      message || 'You do not have permission to perform this action',
+      HttpStatus.FORBIDDEN,
+    )
+  }
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const rules: RequiredRule[] =
@@ -41,31 +35,24 @@ export class PermissionsGuard implements CanActivate {
         CHECK_PERMISSIONS,
         context.getHandler(),
       ) || []
-    const req = context.switchToHttp().getRequest()
-    const payload: Payload = req.payload
+    const request = context.switchToHttp().getRequest()
+    const payload: Payload = request.payload
 
     try {
-      const role = payload.data.user.role
-      const rolePermissions = PERMISSIONS_PER_ROLE[role]
-      const actionsPermissions = rolePermissions[rules[0].subject]
+      const routeSubject = rules[0].subject
+      const routeAction = rules[0].action
+      const userRole = payload.data.user.role
 
-      const action = rules[0].action
+      const rolePermissions = PERMISSIONS_PER_ROLE[userRole]
+      const [actions, restrictions] = rolePermissions[routeSubject].split(':')
 
-      if (
-        actionsPermissions.includes(action) ||
-        actionsPermissions.includes('*')
-      ) {
-        return true
-      }
-      throw new HttpException(
-        'You do not have permission to perform this action',
-        HttpStatus.FORBIDDEN,
-      )
+      this.caslService.populateFilters(request, payload)
+
+      if (actions.includes('*') && restrictions.includes('*')) return true
+
+      this.handleErrors()
     } catch (error) {
-      throw new HttpException(
-        error?.message || 'You do not have permission to perform this action',
-        HttpStatus.FORBIDDEN,
-      )
+      this.handleErrors(error.message)
     }
   }
 }

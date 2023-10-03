@@ -12,6 +12,7 @@ import {
 } from '../dto/users-service.dto'
 import { User } from '../entities/user.entity'
 import Franchise from '../../@shared/entities/franchise.entity'
+import { GlobalFiltersProps } from 'src/@shared/types/filters'
 
 @Injectable()
 export default class UsersService implements UsersServiceGateway {
@@ -42,10 +43,11 @@ export default class UsersService implements UsersServiceGateway {
 
   public async createUserUseCase(
     input: CreateUserUseCaseInputDto,
+    filters: GlobalFiltersProps,
   ): Promise<UserOutputDto> {
     const { tenant, franchises } = await this._verifyConditions(
-      input.tenantId,
-      input.franchisesIds,
+      filters.tenantId,
+      filters.franchisesIds,
     )
     const user = await this.userRepository.save(
       UserMapper.toDomain(input, franchises, tenant),
@@ -56,10 +58,15 @@ export default class UsersService implements UsersServiceGateway {
   public async findAllUsersUseCase(
     take: number,
     skip: number,
+    filters: GlobalFiltersProps,
   ): Promise<UserOutputPaginatedDto> {
     const [franchises, total] = await this.userRepository.findAndCount({
       take,
       skip,
+      where: {
+        tenant: { id: filters.tenantId },
+        franchises: { id: In(filters.franchisesIds) },
+      },
     })
     const data = franchises.map(UserMapper.toUserOutputDto)
 
@@ -80,10 +87,11 @@ export default class UsersService implements UsersServiceGateway {
 
   public async updateUserUseCase(
     input: UpdateUserUseCaseInputDto,
+    filters: GlobalFiltersProps,
   ): Promise<UserOutputDto> {
     const { tenant, franchises } = await this._verifyConditions(
-      input.tenantId,
-      input.franchisesIds,
+      filters.tenantId,
+      filters.franchisesIds,
     )
 
     const updatedUser = await this.userRepository.save(
