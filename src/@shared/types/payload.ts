@@ -1,4 +1,4 @@
-import { RoleKeys } from './roles'
+import { RoleKeys } from './permissions'
 
 export interface Payload {
   data: {

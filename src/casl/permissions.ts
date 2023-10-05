@@ -13,7 +13,7 @@ export const PERMISSIONS_PER_ROLE = {
   },
   ORGANIZATION_ADMIN: {
     tenants: ['view:$', 'edit:$'],
-    plans: ['view:#'],
+    plans: ['view:*'],
     administrators: ['create:#', 'view:#', 'edit:#', 'delete:#'],
     franchises: ['create:#', 'view:#', 'edit:#', 'delete:#'],
   },

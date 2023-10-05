@@ -1,10 +1,11 @@
 import { SetMetadata } from '@nestjs/common'
+import { ActionsKeys, ScopeKeys } from 'src/@shared/types/permissions'
 
 export const CHECK_PERMISSIONS = 'check_permissions'
 
 export interface RequiredRule {
-  action: string
-  subject: string
+  action: ActionsKeys
+  subject: ScopeKeys
   conditions?: any
 }
 
