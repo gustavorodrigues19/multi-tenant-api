@@ -37,10 +37,7 @@ export class AuthGuard implements CanActivate {
 
       request['payload'] = payload
     } catch {
-      throw new HttpException(
-        'You do not have permission to perform this action',
-        HttpStatus.FORBIDDEN,
-      )
+      throw new HttpException('Access denied', HttpStatus.FORBIDDEN)
     }
     return true
   }

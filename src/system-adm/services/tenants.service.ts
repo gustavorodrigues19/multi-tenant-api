@@ -54,7 +54,7 @@ export default class TenantsService implements TenantsServiceGateway {
       throw new HttpException('Tenant not found', HttpStatus.NOT_FOUND)
     }
 
-    const plan = await this.planRepository.findOneBy({ id: input.id })
+    const plan = await this.planRepository.findOneBy({ id: input.planId })
     if (!plan) throw new HttpException('Plan not found', HttpStatus.NOT_FOUND)
 
     const updatedTenant = await this.tenantRepository.save(tenant)
