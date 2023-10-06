@@ -21,7 +21,7 @@ export const PERMISSIONS_PER_ROLE = {
     tenants: ['view:$'],
     plans: [],
     franchises: ['view:$', 'edit:$'],
-    administrators: ['create:#', 'view:#', 'edit:#', 'delete:#'],
+    administrators: ['view:$', 'edit:$'],
   },
   COACH_ADMIN: {
     tenants: [],

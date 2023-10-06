@@ -36,6 +36,10 @@ const getPayloadMock = (role: RoleKeys): { payload: Payload } => ({
           id: 'ec0f0af1-1f28-4b23-8cd0-fb6df0424414',
           name: 'Franchise 1',
         },
+        {
+          id: 'de6da790-1790-46c3-903c-df35bf51ee31',
+          name: 'Franchise 1',
+        },
       ],
     },
   },
@@ -79,7 +83,7 @@ describe('CaslPermissionsFactory tests', () => {
   })
 
   describe('Organization admin permission tests', () => {
-    it('Error to perform create tenant action', async () => {
+    it('gives an error to perform create tenant action', async () => {
       const module: TestingModule = await Test.createTestingModule({
         providers: getProviders('tenants', 'create'),
       }).compile()
@@ -94,7 +98,7 @@ describe('CaslPermissionsFactory tests', () => {
         )
     })
 
-    it('Has permission to view own tenant', async () => {
+    it('has permission to view own tenant', async () => {
       const module: TestingModule = await Test.createTestingModule({
         providers: getProviders('tenants', 'view'),
       }).compile()
@@ -108,7 +112,7 @@ describe('CaslPermissionsFactory tests', () => {
       expect(permission).toBe(true)
     })
 
-    it('Error to view tenant of another owner', async () => {
+    it('gives an error to view tenant of another owner', async () => {
       const module: TestingModule = await Test.createTestingModule({
         providers: getProviders('tenants', 'view'),
       }).compile()
@@ -132,7 +136,7 @@ describe('CaslPermissionsFactory tests', () => {
   })
 
   describe('Franchise admin permission tests', () => {
-    it('Error to perform create franchise action', async () => {
+    it('gives error to perform create franchise action', async () => {
       const module: TestingModule = await Test.createTestingModule({
         providers: getProviders('franchises', 'create'),
       }).compile()
@@ -147,7 +151,7 @@ describe('CaslPermissionsFactory tests', () => {
         )
     })
 
-    it('Has permission to view own franchise', async () => {
+    it('has permission to view own franchise', async () => {
       const module: TestingModule = await Test.createTestingModule({
         providers: getProviders('franchises', 'view'),
       }).compile()
@@ -161,9 +165,45 @@ describe('CaslPermissionsFactory tests', () => {
       expect(permission).toBe(true)
     })
 
-    it('Error to view franchise of another owner', async () => {
+    it('gives an error to view franchise of another owner', async () => {
       const module: TestingModule = await Test.createTestingModule({
         providers: getProviders('franchises', 'view'),
+      }).compile()
+
+      const permissionsGuard = module.get<PermissionsGuard>(PermissionsGuard)
+      await permissionsGuard
+        .canActivate(
+          getContextMock('FRANCHISE_ADMIN', {
+            params: { id: '1241214' },
+          }),
+        )
+        .then((data) => {
+          expect(data).toBe(false)
+        })
+        .catch((e) => {
+          expect(e.message).toBe(
+            'You do not have permission to perform this action',
+          )
+        })
+    })
+
+    it('has permission to view own administrator account', async () => {
+      const module: TestingModule = await Test.createTestingModule({
+        providers: getProviders('administrators', 'view'),
+      }).compile()
+      const permissionsGuard = module.get<PermissionsGuard>(PermissionsGuard)
+      const permission = await permissionsGuard.canActivate(
+        getContextMock('FRANCHISE_ADMIN', {
+          params: { id: 'a9ce65ee-bb0d-417c-aa75-211cb72c5986' },
+        }),
+      )
+
+      expect(permission).toBe(true)
+    })
+
+    it('gives an error to edit administrator account of another owner', async () => {
+      const module: TestingModule = await Test.createTestingModule({
+        providers: getProviders('administrators', 'edit'),
       }).compile()
 
       const permissionsGuard = module.get<PermissionsGuard>(PermissionsGuard)

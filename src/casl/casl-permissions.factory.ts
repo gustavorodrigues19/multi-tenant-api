@@ -18,6 +18,7 @@ import {
   ACTIONS_PERMS,
   ActionPermsKeys,
   SCOPES,
+  ScopeKeys,
 } from 'src/@shared/types/permissions'
 
 @Injectable()
@@ -38,6 +39,33 @@ export class PermissionsGuard implements CanActivate {
     const [action] = permission.split(':')
     if (action === routeAction) return true
     return false
+  }
+
+  private checkRestrictAccess(
+    routeSubject: ScopeKeys,
+    request: any,
+    payload: Payload,
+  ) {
+    switch (routeSubject) {
+      case SCOPES.TENANTS:
+        const tenantId = request.params?.id
+        if (tenantId !== payload.data.tenant.id) this.handleErrors()
+        break
+      case SCOPES.FRANCHISES:
+        const franchiseId = request.params?.id ?? request.body?.franchiseId
+
+        const isFranchiseAllowed = payload.data.franchises.some(
+          (item) => item.id === franchiseId,
+        )
+        if (!isFranchiseAllowed) this.handleErrors()
+        break
+      case SCOPES.ADMINISTRATORS:
+        const administratorId = request.params?.id ?? request.body?.userId
+        if (administratorId !== payload.data.user.id) this.handleErrors()
+        break
+      default:
+        this.handleErrors()
+    }
   }
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -67,27 +95,9 @@ export class PermissionsGuard implements CanActivate {
       const scopeAccess: ActionPermsKeys = action.split(':')[1]
 
       if (scopeAccess === ACTIONS_PERMS.RESTRICT) {
-        switch (routeSubject) {
-          case SCOPES.TENANTS:
-            const tenantId = request.params?.id
-            if (tenantId !== payload.data.tenant.id) this.handleErrors()
-            break
-          case SCOPES.FRANCHISES:
-            const franchiseId = request.params?.id ?? request.body?.franchiseId
-
-            const isFranchiseAllowed = payload.data.franchises.some(
-              (item) => item.id === franchiseId,
-            )
-            if (!isFranchiseAllowed) this.handleErrors()
-            break
-          case SCOPES.ADMINISTRATORS:
-            const administratorId = request.params?.id ?? request.body?.userId
-            if (administratorId !== payload.data.user.id) this.handleErrors()
-            break
-          default:
-            this.handleErrors()
-        }
+        this.checkRestrictAccess(routeSubject, request, payload)
       }
+
       this.caslService.populateFilters(request, payload)
 
       return true
