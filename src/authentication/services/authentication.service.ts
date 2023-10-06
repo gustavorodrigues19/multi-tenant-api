@@ -25,6 +25,10 @@ export default class AuthenticationService
     })
     if (!user) throw new HttpException('User not found', HttpStatus.NOT_FOUND)
 
+    if (!user.isActive) {
+      throw new HttpException('User not authorized', HttpStatus.UNAUTHORIZED)
+    }
+
     const passwordDecoded = Buffer.from(input.password, 'base64').toString()
 
     const isMatch = bcrypt.compareSync(passwordDecoded, user.passwd)
