@@ -5,7 +5,6 @@ import {
   IsPhoneNumber,
   IsPostalCode,
   IsString,
-  IsUUID,
 } from 'class-validator'
 
 export class FranchiseInputValidationDto {

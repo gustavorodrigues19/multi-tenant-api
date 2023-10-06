@@ -18,6 +18,7 @@ export interface AdministratorOutputDto {
   id: string
   username: string
   email: string
+  role: string
   language: string
   isActive: boolean
   franchises: {

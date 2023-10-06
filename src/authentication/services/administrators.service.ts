@@ -4,6 +4,7 @@ import { In, Repository } from 'typeorm'
 import Tenant from '../../@shared/entities/tenant.entity'
 import { User } from '../entities/user.entity'
 import Franchise from '../../@shared/entities/franchise.entity'
+import { isEmpty } from 'lodash'
 import { GlobalFiltersProps } from 'src/@shared/types/filters'
 import { AdministratorsServiceGateway } from '../gateway/administrators.gateway'
 import {
@@ -66,8 +67,10 @@ export default class AdministratorsService
       take,
       skip,
       where: {
-        tenant: { id: filters.tenantId },
-        franchises: { id: In(filters.franchisesIds) },
+        ...(filters?.tenantId && { tenant: { id: filters.tenantId } }),
+        ...(!isEmpty(filters.franchisesIds) && {
+          franchises: { id: In(filters.franchisesIds) },
+        }),
       },
     })
     const data = franchises.map(AdministratorMapper.toAdministratorOutputDto)

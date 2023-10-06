@@ -29,6 +29,7 @@ export default class AdministratorMapper {
       username: user.username,
       email: user.email,
       language: user.language,
+      role: user.role,
       isActive: user.isActive,
       franchises: user.franchises.map((franchise) => ({
         id: franchise.id,

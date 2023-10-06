@@ -20,13 +20,13 @@ import { CreateAdministratorValidationDto } from './validations/administrator.dt
 
 @Controller(SCOPES.ADMINISTRATORS)
 export default class AdministratorsController {
-  constructor(private readonly usersService: AdministratorsService) {}
+  constructor(private readonly administratorsService: AdministratorsService) {}
 
   @CheckPermissions({ action: ACTIONS.CREATE, subject: SCOPES.ADMINISTRATORS })
   @UseGuards(PermissionsGuard)
   @Post()
   create(@Body() input: CreateAdministratorValidationDto, @Req() req) {
-    return this.usersService.createAdministratorUseCase(
+    return this.administratorsService.createAdministratorUseCase(
       input,
       req.filters as GlobalFiltersProps,
     )
@@ -36,7 +36,7 @@ export default class AdministratorsController {
   @UseGuards(PermissionsGuard)
   @Get()
   findAll(@Query() { take, skip }, @Req() req) {
-    return this.usersService.findAllAdministratorsUseCase(
+    return this.administratorsService.findAllAdministratorsUseCase(
       take,
       skip,
       req.filters as GlobalFiltersProps,
@@ -50,7 +50,7 @@ export default class AdministratorsController {
   @UseGuards(PermissionsGuard)
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.usersService.findAdministratorUseCase(id)
+    return this.administratorsService.findAdministratorUseCase(id)
   }
 
   @CheckPermissions({ action: ACTIONS.EDIT, subject: SCOPES.ADMINISTRATORS })
@@ -61,7 +61,7 @@ export default class AdministratorsController {
     @Body() input: CreateAdministratorUseCaseInputDto,
     @Req() req,
   ) {
-    return this.usersService.updateAdministratorUseCase(
+    return this.administratorsService.updateAdministratorUseCase(
       { id, ...input },
       req.filters as GlobalFiltersProps,
     )
@@ -71,13 +71,13 @@ export default class AdministratorsController {
   @UseGuards(PermissionsGuard)
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.usersService.removeAdministratorUseCase(id)
+    return this.administratorsService.removeAdministratorUseCase(id)
   }
 
   @CheckPermissions({ action: ACTIONS.EDIT, subject: SCOPES.ADMINISTRATORS })
   @UseGuards(PermissionsGuard)
   @Put(':id/deactivate')
   deactivate(@Param('id') id: string) {
-    return this.usersService.deactivateAdministratorUseCase(id)
+    return this.administratorsService.deactivateAdministratorUseCase(id)
   }
 }
