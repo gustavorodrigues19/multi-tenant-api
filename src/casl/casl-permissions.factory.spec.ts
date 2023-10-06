@@ -130,4 +130,57 @@ describe('CaslPermissionsFactory tests', () => {
         })
     })
   })
+
+  describe('Franchise admin permission tests', () => {
+    it('Error to perform create franchise action', async () => {
+      const module: TestingModule = await Test.createTestingModule({
+        providers: getProviders('franchises', 'create'),
+      }).compile()
+      const permissionsGuard = module.get<PermissionsGuard>(PermissionsGuard)
+
+      await permissionsGuard
+        .canActivate(getContextMock('FRANCHISE_ADMIN'))
+        .catch((e) =>
+          expect(e.message).toBe(
+            'You do not have permission to perform this action',
+          ),
+        )
+    })
+
+    it('Has permission to view own franchise', async () => {
+      const module: TestingModule = await Test.createTestingModule({
+        providers: getProviders('franchises', 'view'),
+      }).compile()
+      const permissionsGuard = module.get<PermissionsGuard>(PermissionsGuard)
+      const permission = await permissionsGuard.canActivate(
+        getContextMock('FRANCHISE_ADMIN', {
+          params: { id: 'ec0f0af1-1f28-4b23-8cd0-fb6df0424414' },
+        }),
+      )
+
+      expect(permission).toBe(true)
+    })
+
+    it('Error to view franchise of another owner', async () => {
+      const module: TestingModule = await Test.createTestingModule({
+        providers: getProviders('franchises', 'view'),
+      }).compile()
+
+      const permissionsGuard = module.get<PermissionsGuard>(PermissionsGuard)
+      await permissionsGuard
+        .canActivate(
+          getContextMock('FRANCHISE_ADMIN', {
+            params: { id: '1241214' },
+          }),
+        )
+        .then((data) => {
+          expect(data).toBe(false)
+        })
+        .catch((e) => {
+          expect(e.message).toBe(
+            'You do not have permission to perform this action',
+          )
+        })
+    })
+  })
 })

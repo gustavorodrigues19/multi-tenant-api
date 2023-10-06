@@ -15,12 +15,9 @@ import { Payload } from 'src/@shared/types/payload'
 import { PERMISSIONS_PER_ROLE } from './permissions'
 import CaslService from './casl.service'
 import {
-  ACTIONS,
   ACTIONS_PERMS,
   ActionPermsKeys,
-  ActionsKeys,
   SCOPES,
-  ScopeKeys,
 } from 'src/@shared/types/permissions'
 
 @Injectable()
@@ -72,11 +69,11 @@ export class PermissionsGuard implements CanActivate {
       if (scopeAccess === ACTIONS_PERMS.RESTRICT) {
         switch (routeSubject) {
           case SCOPES.TENANTS:
-            const tenantId = request.params?.id ?? request.body?.tenantId
+            const tenantId = request.params?.id
             if (tenantId !== payload.data.tenant.id) this.handleErrors()
             break
           case SCOPES.FRANCHISES:
-            const franchiseId = request.params?.id ?? request.body?.tenantId
+            const franchiseId = request.params?.id ?? request.body?.franchiseId
 
             const isFranchiseAllowed = payload.data.franchises.some(
               (item) => item.id === franchiseId,
