@@ -10,23 +10,23 @@ import {
   UseGuards,
   Req,
 } from '@nestjs/common'
-import UsersService from '../services/users.service'
-import { CreateUserUseCaseInputDto } from '../dto/users-service.dto'
-import { CreateUserValidationDto } from './validations/user.dto'
+import AdministratorsService from '../services/administrators.service'
 import { PermissionsGuard } from 'src/casl/casl-permissions.factory'
 import { CheckPermissions } from '../decorators/permissions.decorator'
 import { GlobalFiltersProps } from 'src/@shared/types/filters'
 import { ACTIONS, SCOPES } from 'src/@shared/types/permissions'
+import { CreateAdministratorUseCaseInputDto } from '../dto/administrators-service.dto'
+import { CreateAdministratorValidationDto } from './validations/administrator.dto'
 
 @Controller(SCOPES.ADMINISTRATORS)
-export default class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+export default class AdministratorsController {
+  constructor(private readonly usersService: AdministratorsService) {}
 
   @CheckPermissions({ action: ACTIONS.CREATE, subject: SCOPES.ADMINISTRATORS })
   @UseGuards(PermissionsGuard)
   @Post()
-  create(@Body() input: CreateUserValidationDto, @Req() req) {
-    return this.usersService.createUserUseCase(
+  create(@Body() input: CreateAdministratorValidationDto, @Req() req) {
+    return this.usersService.createAdministratorUseCase(
       input,
       req.filters as GlobalFiltersProps,
     )
@@ -36,7 +36,7 @@ export default class UsersController {
   @UseGuards(PermissionsGuard)
   @Get()
   findAll(@Query() { take, skip }, @Req() req) {
-    return this.usersService.findAllUsersUseCase(
+    return this.usersService.findAllAdministratorsUseCase(
       take,
       skip,
       req.filters as GlobalFiltersProps,
@@ -50,7 +50,7 @@ export default class UsersController {
   @UseGuards(PermissionsGuard)
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.usersService.findUserUseCase(id)
+    return this.usersService.findAdministratorUseCase(id)
   }
 
   @CheckPermissions({ action: ACTIONS.EDIT, subject: SCOPES.ADMINISTRATORS })
@@ -58,10 +58,10 @@ export default class UsersController {
   @Put(':id')
   update(
     @Param('id') id: string,
-    @Body() input: CreateUserUseCaseInputDto,
+    @Body() input: CreateAdministratorUseCaseInputDto,
     @Req() req,
   ) {
-    return this.usersService.updateUserUseCase(
+    return this.usersService.updateAdministratorUseCase(
       { id, ...input },
       req.filters as GlobalFiltersProps,
     )
@@ -71,13 +71,13 @@ export default class UsersController {
   @UseGuards(PermissionsGuard)
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.usersService.removeUserUseCase(id)
+    return this.usersService.removeAdministratorUseCase(id)
   }
 
   @CheckPermissions({ action: ACTIONS.EDIT, subject: SCOPES.ADMINISTRATORS })
   @UseGuards(PermissionsGuard)
   @Put(':id/deactivate')
   deactivate(@Param('id') id: string) {
-    return this.usersService.deactivateUserUseCase(id)
+    return this.usersService.deactivateAdministratorUseCase(id)
   }
 }

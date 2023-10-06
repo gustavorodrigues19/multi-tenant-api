@@ -54,7 +54,6 @@ export class FranchiseInputValidationDto {
   @IsNotEmpty()
   isActive: boolean
 
-  @IsNotEmpty()
-  @IsUUID()
+  @IsEmpty()
   tenantId: string
 }

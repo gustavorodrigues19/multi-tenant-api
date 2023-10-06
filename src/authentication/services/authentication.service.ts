@@ -5,7 +5,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
 import * as bcrypt from 'bcryptjs'
 import { JwtService } from '@nestjs/jwt'
 import { AuthenticationInputDto } from '../dto/authentication.service.dto'
-import { AuthenticationServiceGateway } from '../gateway/authentication-adm.gateway'
+import { AuthenticationServiceGateway } from '../gateway/administrators.gateway'
 
 @Injectable()
 export default class AuthenticationService

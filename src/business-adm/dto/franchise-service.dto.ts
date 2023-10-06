@@ -12,7 +12,6 @@ export interface CreateFranchiseUseCaseInputDto {
   state: string
   country: string
   isActive: boolean
-  tenantId: string
 }
 
 export interface UpdateFranchiseUseCaseInputDto

@@ -1,12 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing'
-import UsersService from './users.service'
+import AdministratorsService from './administrators.service'
 import { getRepositoryToken } from '@nestjs/typeorm'
 import Tenant from '../../@shared/entities/tenant.entity'
 import Franchise from '../../@shared/entities/franchise.entity'
 import { User } from '../entities/user.entity'
 
 const providers = [
-  UsersService,
+  AdministratorsService,
   {
     provide: getRepositoryToken(Tenant),
     useClass: class mockRepository {
@@ -29,15 +29,15 @@ const providers = [
   },
 ]
 
-describe('Users Service', () => {
-  let service: UsersService
+describe('Administrators Service', () => {
+  let service: AdministratorsService
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers,
     }).compile()
 
-    service = module.get<UsersService>(UsersService)
+    service = module.get<AdministratorsService>(AdministratorsService)
   })
 
   it('should be defined', () => {

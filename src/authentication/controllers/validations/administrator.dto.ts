@@ -1,6 +1,6 @@
 import { IsBase64, IsEmail, IsEnum, IsNotEmpty, IsUUID } from 'class-validator'
 
-class BodyUserValidationDto {
+class BodyAdministratorValidationDto {
   @IsNotEmpty()
   username: string
 
@@ -22,7 +22,7 @@ class BodyUserValidationDto {
   isActive: boolean
 }
 
-export class CreateUserValidationDto extends BodyUserValidationDto {
+export class CreateAdministratorValidationDto extends BodyAdministratorValidationDto {
   @IsNotEmpty()
   @IsUUID('4', { each: true })
   franchisesIds: string[]
@@ -37,7 +37,7 @@ export class CreateUserValidationDto extends BodyUserValidationDto {
   tenantId: string
 }
 
-export class CreateUserMasterAdminValidationDto extends BodyUserValidationDto {
+export class CreateAdministratorMasterAdminValidationDto extends BodyAdministratorValidationDto {
   @IsNotEmpty()
   @IsUUID('4', { each: true })
   franchisesIds: string[]

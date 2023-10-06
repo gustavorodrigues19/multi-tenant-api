@@ -8,11 +8,13 @@ import {
   Delete,
   Query,
   UseGuards,
+  Req,
 } from '@nestjs/common'
 import FranchisesService from '../services/franchises.service'
 import { FranchiseInputValidationDto } from './validations/franchises'
 import { CheckPermissions } from 'src/authentication/decorators/permissions.decorator'
 import { PermissionsGuard } from 'src/casl/casl-permissions.factory'
+import { GlobalFiltersProps } from 'src/@shared/types/filters'
 
 @Controller('franchises')
 export default class FranchisesController {
@@ -21,8 +23,11 @@ export default class FranchisesController {
   @CheckPermissions({ action: 'create', subject: 'franchises' })
   @UseGuards(PermissionsGuard)
   @Post()
-  create(@Body() input: FranchiseInputValidationDto) {
-    return this.franchiseService.createFranchiseUseCase(input)
+  create(@Body() input: FranchiseInputValidationDto, @Req() req) {
+    return this.franchiseService.createFranchiseUseCase(
+      input,
+      req.filters as GlobalFiltersProps,
+    )
   }
 
   @CheckPermissions({ action: 'view', subject: 'franchises' })

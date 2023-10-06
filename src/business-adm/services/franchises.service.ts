@@ -11,6 +11,7 @@ import {
 } from '../dto/franchise-service.dto'
 import Franchise from '../../@shared/entities/franchise.entity'
 import FranchiseMapper from '../mappers/franchises.mapper'
+import { GlobalFiltersProps } from 'src/@shared/types/filters'
 
 @Injectable()
 export default class FranchisesService implements FranchisesServiceGateway {
@@ -23,13 +24,29 @@ export default class FranchisesService implements FranchisesServiceGateway {
 
   public async createFranchiseUseCase(
     input: CreateFranchiseUseCaseInputDto,
+    filters: GlobalFiltersProps,
   ): Promise<FranchiseOutputDto> {
-    const tenant = await this.tenantRepository.findOneBy({ id: input.tenantId })
+    const tenant = await this.tenantRepository.findOneBy({
+      id: filters.tenantId,
+    })
     if (!tenant)
       throw new HttpException('Tenant not found', HttpStatus.NOT_FOUND)
 
+    const franchiseName = await this.franchiseRepository.findOneBy({
+      name: input.name,
+      tenant: {
+        id: filters.tenantId,
+      },
+    })
+    if (franchiseName) {
+      throw new HttpException(
+        'Franchise name already exists',
+        HttpStatus.CONFLICT,
+      )
+    }
+
     const franchise = await this.franchiseRepository.save(
-      FranchiseMapper.toDomain(input),
+      FranchiseMapper.toDomain(input, filters.tenantId),
     )
     return FranchiseMapper.toFranchiseOutputDto(franchise)
   }

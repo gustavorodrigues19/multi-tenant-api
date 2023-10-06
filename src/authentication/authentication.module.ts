@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common'
-import UsersService from './services/users.service'
+import AdministratorService from './services/administrators.service'
 import UsersController from './controllers/administrators.controller'
 import Tenant from '../@shared/entities/tenant.entity'
 import { TypeOrmModule } from '@nestjs/typeorm'
@@ -20,6 +20,6 @@ import CaslService from 'src/casl/casl.service'
     }),
   ],
   controllers: [UsersController, AuthController],
-  providers: [UsersService, AuthenticationService, CaslService],
+  providers: [AdministratorService, AuthenticationService, CaslService],
 })
 export class AuthenticationModule {}

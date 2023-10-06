@@ -2,7 +2,7 @@ import Franchise from '../../@shared/entities/franchise.entity'
 import { FranchiseOutputDto } from '../dto/franchise-service.dto'
 
 export default class FranchiseMapper {
-  static toDomain(input: any): any {
+  static toDomain(input: any, tenantId: string): any {
     return {
       ...(input?.id && { id: input.id }),
       name: input.name,
@@ -19,7 +19,7 @@ export default class FranchiseMapper {
       country: input.country,
       isActive: input.isActive,
       tenant: {
-        id: input.tenantId,
+        id: tenantId,
       },
     }
   }

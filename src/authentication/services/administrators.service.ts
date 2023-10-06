@@ -1,21 +1,23 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { In, Repository } from 'typeorm'
-import { UsersServiceGateway } from '../gateway/authentication-adm.gateway'
 import Tenant from '../../@shared/entities/tenant.entity'
-import UserMapper from '../mappers/users.mapper'
-import {
-  CreateUserUseCaseInputDto,
-  UpdateUserUseCaseInputDto,
-  UserOutputDto,
-  UserOutputPaginatedDto,
-} from '../dto/users-service.dto'
 import { User } from '../entities/user.entity'
 import Franchise from '../../@shared/entities/franchise.entity'
 import { GlobalFiltersProps } from 'src/@shared/types/filters'
+import { AdministratorsServiceGateway } from '../gateway/administrators.gateway'
+import {
+  AdministratorOutputDto,
+  AdministratorOutputPaginatedDto,
+  CreateAdministratorUseCaseInputDto,
+  UpdateAdministratorUseCaseInputDto,
+} from '../dto/administrators-service.dto'
+import AdministratorMapper from '../mappers/administrators.mapper'
 
 @Injectable()
-export default class UsersService implements UsersServiceGateway {
+export default class AdministratorsService
+  implements AdministratorsServiceGateway
+{
   constructor(
     @InjectRepository(User)
     private userRepository: Repository<User>,
@@ -41,25 +43,25 @@ export default class UsersService implements UsersServiceGateway {
     return { tenant, franchises }
   }
 
-  public async createUserUseCase(
-    input: CreateUserUseCaseInputDto,
+  public async createAdministratorUseCase(
+    input: CreateAdministratorUseCaseInputDto,
     filters: GlobalFiltersProps,
-  ): Promise<UserOutputDto> {
+  ): Promise<AdministratorOutputDto> {
     const { tenant, franchises } = await this._verifyConditions(
       filters.tenantId,
       filters.franchisesIds,
     )
     const user = await this.userRepository.save(
-      UserMapper.toDomain(input, franchises, tenant),
+      AdministratorMapper.toDomain(input, franchises, tenant),
     )
-    return UserMapper.toUserOutputDto(user)
+    return AdministratorMapper.toAdministratorOutputDto(user)
   }
 
-  public async findAllUsersUseCase(
+  public async findAllAdministratorsUseCase(
     take: number,
     skip: number,
     filters: GlobalFiltersProps,
-  ): Promise<UserOutputPaginatedDto> {
+  ): Promise<AdministratorOutputPaginatedDto> {
     const [franchises, total] = await this.userRepository.findAndCount({
       take,
       skip,
@@ -68,7 +70,7 @@ export default class UsersService implements UsersServiceGateway {
         franchises: { id: In(filters.franchisesIds) },
       },
     })
-    const data = franchises.map(UserMapper.toUserOutputDto)
+    const data = franchises.map(AdministratorMapper.toAdministratorOutputDto)
 
     return {
       data,
@@ -76,50 +78,58 @@ export default class UsersService implements UsersServiceGateway {
     }
   }
 
-  public async findUserUseCase(id: string): Promise<UserOutputDto> {
+  public async findAdministratorUseCase(
+    id: string,
+  ): Promise<AdministratorOutputDto> {
     const user = await this.userRepository.findOneBy({ id })
     if (!user) {
-      throw new HttpException('User not found', HttpStatus.NOT_FOUND)
+      throw new HttpException('Administrator not found', HttpStatus.NOT_FOUND)
     }
 
-    return UserMapper.toUserOutputDto(user)
+    return AdministratorMapper.toAdministratorOutputDto(user)
   }
 
-  public async updateUserUseCase(
-    input: UpdateUserUseCaseInputDto,
+  public async updateAdministratorUseCase(
+    input: UpdateAdministratorUseCaseInputDto,
     filters: GlobalFiltersProps,
-  ): Promise<UserOutputDto> {
+  ): Promise<AdministratorOutputDto> {
     const { tenant, franchises } = await this._verifyConditions(
       filters.tenantId,
       filters.franchisesIds,
     )
 
-    const updatedUser = await this.userRepository.save(
-      UserMapper.toDomain(input, franchises, tenant),
+    const updatedAdministrator = await this.userRepository.save(
+      AdministratorMapper.toDomain(input, franchises, tenant),
     )
-    return UserMapper.toUserOutputDto(updatedUser)
+    return AdministratorMapper.toAdministratorOutputDto(updatedAdministrator)
   }
 
-  public async deactivateUserUseCase(id: string): Promise<UserOutputDto> {
+  public async deactivateAdministratorUseCase(
+    id: string,
+  ): Promise<AdministratorOutputDto> {
     const user = await this.userRepository.findOneBy({ id })
     if (!user) {
-      throw new HttpException('User not found', HttpStatus.NOT_FOUND)
+      throw new HttpException('Administrator not found', HttpStatus.NOT_FOUND)
     }
 
-    const deactivatedUser = await this.userRepository.save({
+    const deactivatedAdministrator = await this.userRepository.save({
       ...user,
       isActive: false,
     })
-    return UserMapper.toUserOutputDto(deactivatedUser)
+    return AdministratorMapper.toAdministratorOutputDto(
+      deactivatedAdministrator,
+    )
   }
 
-  public async removeUserUseCase(id: string): Promise<UserOutputDto> {
+  public async removeAdministratorUseCase(
+    id: string,
+  ): Promise<AdministratorOutputDto> {
     const user = await this.userRepository.findOneBy({ id })
     if (!user) {
-      throw new HttpException('User not found', HttpStatus.NOT_FOUND)
+      throw new HttpException('Administrator not found', HttpStatus.NOT_FOUND)
     }
 
     await this.userRepository.delete({ id })
-    return UserMapper.toUserOutputDto(user)
+    return AdministratorMapper.toAdministratorOutputDto(user)
   }
 }

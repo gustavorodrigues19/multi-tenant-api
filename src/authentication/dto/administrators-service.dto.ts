@@ -1,4 +1,4 @@
-export interface CreateUserUseCaseInputDto {
+export interface CreateAdministratorUseCaseInputDto {
   username: string
   email: string
   passwd: string
@@ -9,11 +9,12 @@ export interface CreateUserUseCaseInputDto {
   franchisesIds: string[]
 }
 
-export interface UpdateUserUseCaseInputDto extends CreateUserUseCaseInputDto {
+export interface UpdateAdministratorUseCaseInputDto
+  extends CreateAdministratorUseCaseInputDto {
   id: string
 }
 
-export interface UserOutputDto {
+export interface AdministratorOutputDto {
   id: string
   username: string
   email: string
@@ -25,7 +26,7 @@ export interface UserOutputDto {
   }[]
 }
 
-export interface UserOutputPaginatedDto {
-  data: UserOutputDto[]
+export interface AdministratorOutputPaginatedDto {
+  data: AdministratorOutputDto[]
   total: number
 }
