@@ -6,12 +6,14 @@ import {
   Param,
   Put,
   UseGuards,
+  Req,
 } from '@nestjs/common'
 import TenantsService from '../services/tenants.service'
 import { CreateTenantUseCaseInputDto } from '../dto/tenant-service.dto'
 import { CheckPermissions } from 'src/authentication/decorators/permissions.decorator'
 import { PermissionsGuard } from 'src/casl/casl-permissions.factory'
 import { ACTIONS, SCOPES } from 'src/@shared/types/permissions'
+import { LanguagesTypesKeys } from 'src/@shared/types/languages'
 
 @Controller(SCOPES.TENANTS)
 export default class TenantsController {
@@ -20,8 +22,11 @@ export default class TenantsController {
   @CheckPermissions({ action: ACTIONS.CREATE, subject: SCOPES.TENANTS })
   @UseGuards(PermissionsGuard)
   @Post()
-  create(@Body() input: CreateTenantUseCaseInputDto) {
-    return this.tenantService.createTenantUseCase(input)
+  create(@Body() input: CreateTenantUseCaseInputDto, @Req() req) {
+    return this.tenantService.createTenantUseCase(
+      input,
+      req.language as LanguagesTypesKeys,
+    )
   }
 
   @CheckPermissions({ action: ACTIONS.VIEW, subject: SCOPES.TENANTS })
@@ -34,14 +39,24 @@ export default class TenantsController {
   @CheckPermissions({ action: ACTIONS.VIEW, subject: SCOPES.TENANTS })
   @UseGuards(PermissionsGuard)
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.tenantService.findTenantUseCase(id)
+  findOne(@Param('id') id: string, @Req() req) {
+    return this.tenantService.findTenantUseCase(
+      id,
+      req.language as LanguagesTypesKeys,
+    )
   }
 
   @CheckPermissions({ action: ACTIONS.EDIT, subject: SCOPES.TENANTS })
   @UseGuards(PermissionsGuard)
   @Put(':id')
-  update(@Param('id') id: string, @Body() input: CreateTenantUseCaseInputDto) {
-    return this.tenantService.updateTenantUseCase({ id, ...input })
+  update(
+    @Param('id') id: string,
+    @Body() input: CreateTenantUseCaseInputDto,
+    @Req() req,
+  ) {
+    return this.tenantService.updateTenantUseCase(
+      { id, ...input },
+      req.language as LanguagesTypesKeys,
+    )
   }
 }

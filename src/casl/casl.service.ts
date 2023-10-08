@@ -40,4 +40,8 @@ export default class CaslService {
       franchisesIds,
     }
   }
+
+  public populateLanguage(request: any, payload: Payload) {
+    request['language'] = payload.data.user.language
+  }
 }

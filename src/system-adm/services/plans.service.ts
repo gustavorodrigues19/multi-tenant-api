@@ -9,6 +9,8 @@ import {
   PlanOutputDto,
   UpdatePlanUseCaseInputDto,
 } from '../dto/plan-service.dto'
+import { ERRORS } from 'src/common/errors-language'
+import { LanguagesTypesKeys } from 'src/@shared/types/languages'
 
 @Injectable()
 export default class PlansService implements PlansServiceGateway {
@@ -29,18 +31,24 @@ export default class PlansService implements PlansServiceGateway {
     return plans.map(PlanMapper.toPlanOutputDto)
   }
 
-  public async findPlanUseCase(id: string): Promise<PlanOutputDto> {
+  public async findPlanUseCase(
+    id: string,
+    language: LanguagesTypesKeys,
+  ): Promise<PlanOutputDto> {
     const plan = await this.planRepository.findOneBy({ id })
-    if (!plan) throw new HttpException('Plan not found', HttpStatus.NOT_FOUND)
+    if (!plan)
+      throw new HttpException(ERRORS.PLANS[language], HttpStatus.NOT_FOUND)
 
     return PlanMapper.toPlanOutputDto(plan)
   }
 
   public async updatePlanUseCase(
     input: UpdatePlanUseCaseInputDto,
+    language: LanguagesTypesKeys,
   ): Promise<PlanOutputDto> {
     const plan = await this.planRepository.findOneBy({ id: input.id })
-    if (!plan) throw new HttpException('Plan not found', HttpStatus.NOT_FOUND)
+    if (!plan)
+      throw new HttpException(ERRORS.PLANS[language], HttpStatus.NOT_FOUND)
 
     const updatedPlan = await this.planRepository.save(input)
     return PlanMapper.toPlanOutputDto(updatedPlan)

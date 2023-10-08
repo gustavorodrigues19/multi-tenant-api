@@ -28,6 +28,7 @@ export const getPayloadMock = (role: RoleKeys): { payload: Payload } => ({
         username: 'username',
         email: 'your-email@email.com',
         role,
+        language: 'en-us',
       },
       franchises: [
         {

@@ -99,6 +99,7 @@ export class PermissionsGuard implements CanActivate {
       }
 
       this.caslService.populateFilters(request, payload)
+      this.caslService.populateLanguage(request, payload)
 
       return true
     } catch (error) {

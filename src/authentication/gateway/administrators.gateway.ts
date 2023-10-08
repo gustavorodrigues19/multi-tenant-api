@@ -6,11 +6,13 @@ import {
   CreateAdministratorUseCaseInputDto,
   UpdateAdministratorUseCaseInputDto,
 } from '../dto/administrators-service.dto'
+import { LanguagesTypesKeys } from 'src/@shared/types/languages'
 
 export interface AdministratorsServiceGateway {
   createAdministratorUseCase(
     input: CreateAdministratorUseCaseInputDto,
     filters: GlobalFiltersProps,
+    language: LanguagesTypesKeys,
   ): Promise<AdministratorOutputDto>
   findAllAdministratorsUseCase(
     take: number,
@@ -20,10 +22,20 @@ export interface AdministratorsServiceGateway {
   updateAdministratorUseCase(
     input: UpdateAdministratorUseCaseInputDto,
     filters: GlobalFiltersProps,
+    language: LanguagesTypesKeys,
   ): Promise<AdministratorOutputDto>
-  findAdministratorUseCase(id: string): Promise<AdministratorOutputDto>
-  deactivateAdministratorUseCase(id: string): Promise<AdministratorOutputDto>
-  removeAdministratorUseCase(id: string): Promise<AdministratorOutputDto>
+  findAdministratorUseCase(
+    id: string,
+    language: LanguagesTypesKeys,
+  ): Promise<AdministratorOutputDto>
+  deactivateAdministratorUseCase(
+    id: string,
+    language: LanguagesTypesKeys,
+  ): Promise<AdministratorOutputDto>
+  removeAdministratorUseCase(
+    id: string,
+    language: LanguagesTypesKeys,
+  ): Promise<AdministratorOutputDto>
 }
 
 export interface AuthenticationServiceGateway {

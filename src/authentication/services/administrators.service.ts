@@ -14,6 +14,8 @@ import {
   UpdateAdministratorUseCaseInputDto,
 } from '../dto/administrators-service.dto'
 import AdministratorMapper from '../mappers/administrators.mapper'
+import { ERRORS } from 'src/common/errors-language'
+import { LanguagesTypesKeys } from 'src/@shared/types/languages'
 
 @Injectable()
 export default class AdministratorsService
@@ -28,17 +30,27 @@ export default class AdministratorsService
     private franchiseRepository: Repository<Franchise>,
   ) {}
 
-  private async _verifyConditions(tenantId: string, franchisesIds: string[]) {
+  private async _verifyConditions(
+    tenantId: string,
+    franchisesIds: string[],
+    language: LanguagesTypesKeys,
+  ) {
     const tenant = await this.tenantRepository.findOneBy({ id: tenantId })
     if (!tenant) {
-      throw new HttpException('Tenant not found', HttpStatus.NOT_FOUND)
+      throw new HttpException(
+        ERRORS.TENANTS.NOT_FOUND[language],
+        HttpStatus.NOT_FOUND,
+      )
     }
 
     const franchises = await this.franchiseRepository.find({
       where: { id: In(franchisesIds || []) },
     })
     if (franchises.length !== franchisesIds.length) {
-      throw new HttpException('Franchises not found', HttpStatus.NOT_FOUND)
+      throw new HttpException(
+        ERRORS.FRANCHISES.NOT_FOUND[language],
+        HttpStatus.NOT_FOUND,
+      )
     }
 
     return { tenant, franchises }
@@ -47,10 +59,12 @@ export default class AdministratorsService
   public async createAdministratorUseCase(
     input: CreateAdministratorUseCaseInputDto,
     filters: GlobalFiltersProps,
+    language: LanguagesTypesKeys,
   ): Promise<AdministratorOutputDto> {
     const { tenant, franchises } = await this._verifyConditions(
       filters.tenantId,
       filters.franchisesIds,
+      language,
     )
     const user = await this.userRepository.save(
       AdministratorMapper.toDomain(input, franchises, tenant),
@@ -83,10 +97,15 @@ export default class AdministratorsService
 
   public async findAdministratorUseCase(
     id: string,
+    language: LanguagesTypesKeys,
   ): Promise<AdministratorOutputDto> {
+    console.log('language', language)
     const user = await this.userRepository.findOneBy({ id })
     if (!user) {
-      throw new HttpException('Administrator not found', HttpStatus.NOT_FOUND)
+      throw new HttpException(
+        ERRORS.ADMINISTRATORS.NOT_FOUND[language],
+        HttpStatus.NOT_FOUND,
+      )
     }
 
     return AdministratorMapper.toAdministratorOutputDto(user)
@@ -95,10 +114,12 @@ export default class AdministratorsService
   public async updateAdministratorUseCase(
     input: UpdateAdministratorUseCaseInputDto,
     filters: GlobalFiltersProps,
+    language: LanguagesTypesKeys,
   ): Promise<AdministratorOutputDto> {
     const { tenant, franchises } = await this._verifyConditions(
       filters.tenantId,
       filters.franchisesIds,
+      language,
     )
 
     const updatedAdministrator = await this.userRepository.save(
@@ -109,10 +130,14 @@ export default class AdministratorsService
 
   public async deactivateAdministratorUseCase(
     id: string,
+    language: LanguagesTypesKeys,
   ): Promise<AdministratorOutputDto> {
     const user = await this.userRepository.findOneBy({ id })
     if (!user) {
-      throw new HttpException('Administrator not found', HttpStatus.NOT_FOUND)
+      throw new HttpException(
+        ERRORS.ADMINISTRATORS.NOT_FOUND[language],
+        HttpStatus.NOT_FOUND,
+      )
     }
 
     const deactivatedAdministrator = await this.userRepository.save({
@@ -126,10 +151,14 @@ export default class AdministratorsService
 
   public async removeAdministratorUseCase(
     id: string,
+    language: LanguagesTypesKeys,
   ): Promise<AdministratorOutputDto> {
     const user = await this.userRepository.findOneBy({ id })
     if (!user) {
-      throw new HttpException('Administrator not found', HttpStatus.NOT_FOUND)
+      throw new HttpException(
+        ERRORS.ADMINISTRATORS.NOT_FOUND[language],
+        HttpStatus.NOT_FOUND,
+      )
     }
 
     await this.userRepository.delete({ id })

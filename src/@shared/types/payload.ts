@@ -1,3 +1,4 @@
+import { LanguagesTypesKeys } from './languages'
 import { RoleKeys } from './permissions'
 
 export interface Payload {
@@ -15,6 +16,7 @@ export interface Payload {
       username: string
       email: string
       role: RoleKeys
+      language: LanguagesTypesKeys
     }
   }
 }

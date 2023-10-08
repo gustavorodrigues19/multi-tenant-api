@@ -1,3 +1,4 @@
+import { LanguagesTypesKeys } from 'src/@shared/types/languages'
 import {
   CreatePlanUseCaseInputDto,
   PlanOutputDto,
@@ -12,17 +13,28 @@ import {
 export interface TenantsServiceGateway {
   createTenantUseCase(
     input: CreateTenantUseCaseInputDto,
+    language: LanguagesTypesKeys,
   ): Promise<TenantOutputDto>
   findAllTenantsUseCase(): Promise<TenantOutputDto[]>
-  findTenantUseCase(id: string): Promise<TenantOutputDto>
+  findTenantUseCase(
+    id: string,
+    language: LanguagesTypesKeys,
+  ): Promise<TenantOutputDto>
   updateTenantUseCase(
     input: UpdateTenantUseCaseInputDto,
+    language: LanguagesTypesKeys,
   ): Promise<TenantOutputDto>
 }
 
 export interface PlansServiceGateway {
   createPlanUseCase(input: CreatePlanUseCaseInputDto): Promise<PlanOutputDto>
   findAllPlansUseCase(): Promise<PlanOutputDto[]>
-  findPlanUseCase(id: string): Promise<PlanOutputDto>
-  updatePlanUseCase(input: UpdatePlanUseCaseInputDto): Promise<PlanOutputDto>
+  findPlanUseCase(
+    id: string,
+    language: LanguagesTypesKeys,
+  ): Promise<PlanOutputDto>
+  updatePlanUseCase(
+    input: UpdatePlanUseCaseInputDto,
+    language: LanguagesTypesKeys,
+  ): Promise<PlanOutputDto>
 }
