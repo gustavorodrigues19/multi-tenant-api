@@ -21,55 +21,62 @@ export default class AuthenticationService
   public async authenticateUseCase(
     input: AuthenticationInputDto,
   ): Promise<{ accessToken: string }> {
-    const user = await this.userRepository.findOneBy({
-      username: input.username,
-    })
-    if (!user)
-      throw new HttpException(
-        ERRORS.AUTHENTICATION.NOT_FOUND['en-us'],
-        HttpStatus.NOT_FOUND,
-      )
+    try {
+      const user = await this.userRepository.findOneBy({
+        username: input.username,
+      })
+      if (!user)
+        throw new HttpException(
+          ERRORS.AUTHENTICATION.NOT_FOUND['en-us'],
+          HttpStatus.NOT_FOUND,
+        )
 
-    const language = user.language || 'en-us'
+      const language = user.language || 'en-us'
 
-    if (!user.isActive) {
+      if (!user.isActive) {
+        throw new HttpException(
+          ERRORS.AUTHENTICATION.NOT_AUTHORIZED[language],
+          HttpStatus.UNAUTHORIZED,
+        )
+      }
+
+      const passwordDecoded = Buffer.from(input.password, 'base64').toString()
+
+      const isMatch = bcrypt.compareSync(passwordDecoded, user.passwd)
+      if (!isMatch) {
+        throw new HttpException(
+          ERRORS.AUTHENTICATION.NOT_AUTHORIZED[language],
+          HttpStatus.UNAUTHORIZED,
+        )
+      }
+
+      const data = {
+        tenant: {
+          id: user.tenant.id,
+          name: user.tenant.name,
+        },
+        franchises: user.franchises.map((franchise) => ({
+          id: franchise.id,
+          name: franchise.name,
+        })),
+        user: {
+          id: user.id,
+          username: user.username,
+          email: user.email,
+          role: user.role,
+          language: user.language,
+        },
+      }
+
+      const token = await this.jwtService.signAsync({ data })
+      const tokenEncoded = Buffer.from(token).toString('base64')
+
+      return { accessToken: tokenEncoded }
+    } catch (error) {
       throw new HttpException(
-        ERRORS.AUTHENTICATION.NOT_AUTHORIZED[language],
+        ERRORS.AUTHENTICATION.NOT_AUTHORIZED['en-us'],
         HttpStatus.UNAUTHORIZED,
       )
     }
-
-    const passwordDecoded = Buffer.from(input.password, 'base64').toString()
-
-    const isMatch = bcrypt.compareSync(passwordDecoded, user.passwd)
-    if (!isMatch) {
-      throw new HttpException(
-        ERRORS.AUTHENTICATION.NOT_AUTHORIZED[language],
-        HttpStatus.UNAUTHORIZED,
-      )
-    }
-
-    const data = {
-      tenant: {
-        id: user.tenant.id,
-        name: user.tenant.name,
-      },
-      franchises: user.franchises.map((franchise) => ({
-        id: franchise.id,
-        name: franchise.name,
-      })),
-      user: {
-        id: user.id,
-        username: user.username,
-        email: user.email,
-        role: user.role,
-        language: user.language,
-      },
-    }
-
-    const token = await this.jwtService.signAsync({ data })
-    const tokenEncoded = Buffer.from(token).toString('base64')
-
-    return { accessToken: tokenEncoded }
   }
 }

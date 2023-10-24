@@ -5,6 +5,6 @@ export class LoginValidationDto {
   username: string
 
   @IsNotEmpty()
-  @IsBase64()
+  @IsBase64({ message: 'Wrong credentials' })
   password: string
 }

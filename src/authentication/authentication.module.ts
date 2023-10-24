@@ -16,7 +16,7 @@ import CaslService from 'src/casl/casl.service'
     JwtModule.register({
       global: true,
       secret: process.env.SECRET_KEY,
-      signOptions: { expiresIn: '1h' },
+      signOptions: { expiresIn: '1d' },
     }),
   ],
   controllers: [UsersController, AuthController],
