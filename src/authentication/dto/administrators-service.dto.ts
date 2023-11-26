@@ -29,5 +29,7 @@ export interface AdministratorOutputDto {
 
 export interface AdministratorOutputPaginatedDto {
   data: AdministratorOutputDto[]
+  offset: number
+  pageSize: number
   total: number
 }

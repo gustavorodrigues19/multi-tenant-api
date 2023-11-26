@@ -18,6 +18,7 @@ import { ACTIONS, SCOPES } from 'src/@shared/types/permissions'
 import { CreateAdministratorUseCaseInputDto } from '../dto/administrators-service.dto'
 import { CreateAdministratorValidationDto } from './validations/administrator.dto'
 import { LanguagesTypesKeys } from 'src/@shared/types/languages'
+import { getPageSizeAndOffset } from 'src/utils/convert'
 
 @Controller(SCOPES.ADMINISTRATORS)
 export default class AdministratorsController {
@@ -37,10 +38,17 @@ export default class AdministratorsController {
   @CheckPermissions({ action: ACTIONS.VIEW, subject: SCOPES.ADMINISTRATORS })
   @UseGuards(PermissionsGuard)
   @Get()
-  findAll(@Query() { take, skip }, @Req() req) {
+  findAll(
+    @Query() { pageSize, offset }: { pageSize: string; offset: string },
+    @Req() req,
+  ) {
+    const { parsedPageSize, parsedOffset } = getPageSizeAndOffset(
+      pageSize,
+      offset,
+    )
     return this.administratorsService.findAllAdministratorsUseCase(
-      take,
-      skip,
+      parsedPageSize,
+      parsedOffset,
       req.filters as GlobalFiltersProps,
     )
   }

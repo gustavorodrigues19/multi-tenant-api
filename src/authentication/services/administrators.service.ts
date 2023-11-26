@@ -73,13 +73,13 @@ export default class AdministratorsService
   }
 
   public async findAllAdministratorsUseCase(
-    take: number,
-    skip: number,
+    pageSize: number,
+    offset: number,
     filters: GlobalFiltersProps,
   ): Promise<AdministratorOutputPaginatedDto> {
     const [franchises, total] = await this.userRepository.findAndCount({
-      take,
-      skip,
+      take: pageSize,
+      skip: offset,
       where: {
         ...(filters?.tenantId && { tenant: { id: filters.tenantId } }),
         ...(!isEmpty(filters.franchisesIds) && {
@@ -91,6 +91,8 @@ export default class AdministratorsService
 
     return {
       data,
+      offset,
+      pageSize,
       total,
     }
   }
