@@ -38,5 +38,7 @@ export interface FranchiseOutputDto {
 
 export interface FranchiseOutputPaginatedDto {
   data: FranchiseOutputDto[]
+  offset: number
+  pageSize: number
   total: number
 }

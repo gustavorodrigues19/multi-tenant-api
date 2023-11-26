@@ -15,6 +15,7 @@ import { FranchiseInputValidationDto } from './validations/franchises'
 import { CheckPermissions } from 'src/authentication/decorators/permissions.decorator'
 import { PermissionsGuard } from 'src/casl/casl-permissions.factory'
 import { GlobalFiltersProps } from 'src/@shared/types/filters'
+import { getPageSizeAndOffset } from 'src/utils/convert'
 
 @Controller('franchises')
 export default class FranchisesController {
@@ -33,8 +34,15 @@ export default class FranchisesController {
   @CheckPermissions({ action: 'view', subject: 'franchises' })
   @UseGuards(PermissionsGuard)
   @Get()
-  findAll(@Query() { take, skip }) {
-    return this.franchiseService.findAllFranchisesUseCase(take, skip)
+  findAll(@Query() { pageSize, offset }: { pageSize: string; offset: string }) {
+    const { parsedPageSize, parsedOffset } = getPageSizeAndOffset(
+      pageSize,
+      offset,
+    )
+    return this.franchiseService.findAllFranchisesUseCase(
+      parsedPageSize,
+      parsedOffset,
+    )
   }
 
   @CheckPermissions({ action: 'view', subject: 'franchises' })

@@ -52,17 +52,19 @@ export default class FranchisesService implements FranchisesServiceGateway {
   }
 
   public async findAllFranchisesUseCase(
-    take: number,
-    skip: number,
+    pageSize: number,
+    offset: number,
   ): Promise<FranchiseOutputPaginatedDto> {
     const [franchises, total] = await this.franchiseRepository.findAndCount({
-      take,
-      skip,
+      take: pageSize,
+      skip: offset,
     })
     const data = franchises.map(FranchiseMapper.toFranchiseOutputDto)
 
     return {
       data,
+      offset,
+      pageSize,
       total,
     }
   }
