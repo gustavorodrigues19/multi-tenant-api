@@ -13,14 +13,20 @@ export default class Tenant {
   @PrimaryGeneratedColumn('uuid')
   id: string
 
-  @Column()
+  @Column({ length: 100 })
   name: string
 
-  @Column()
+  @Column({ length: 20 })
   document: string
 
-  @Column()
+  @Column({ length: 100 })
   domain: string
+
+  @Column({ length: 255 })
+  logoUrlDark: string
+
+  @Column({ length: 255 })
+  logoUrlLight: string
 
   @Column({ default: true })
   isActive: boolean

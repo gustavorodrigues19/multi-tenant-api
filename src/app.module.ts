@@ -13,6 +13,7 @@ import { AuthenticationModule } from './authentication/authentication.module'
 import { APP_GUARD } from '@nestjs/core'
 import { AuthGuard } from './authentication/guards/auth.guard'
 import { CaslModule } from './casl/casl.module'
+import { AcademyAdmModule } from './academy-adm/academy-adm.module'
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { CaslModule } from './casl/casl.module'
     SystemAdmModule,
     BusinessAdmModule,
     AuthenticationModule,
+    AcademyAdmModule,
     CaslModule,
   ],
   controllers: [AppController],

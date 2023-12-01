@@ -13,41 +13,44 @@ export default class Franchise {
   @PrimaryGeneratedColumn('uuid')
   id: string
 
-  @Column()
+  @Column({ length: 100 })
   name: string
 
-  @Column()
+  @Column({ length: 100 })
   email: string
 
-  @Column()
+  @Column({ length: 20 })
   phone: string
 
-  @Column()
+  @Column({ length: 20 })
   document: string
 
-  @Column()
+  @Column({ length: 100 })
   street: string
 
-  @Column()
+  @Column({ length: 25 })
   number: string
 
-  @Column()
+  @Column({ length: 100 })
   neighborhood: string
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, length: 100 })
   complement: string
 
-  @Column()
+  @Column({ length: 20 })
   zipCode: string
 
-  @Column()
+  @Column({ length: 50 })
   city: string
 
-  @Column()
+  @Column({ length: 50 })
   state: string
 
-  @Column()
+  @Column({ length: 50 })
   country: string
+
+  @Column({ nullable: true, length: 255 })
+  medicalReportUrl: string
 
   @Column({ default: true })
   isActive: boolean
